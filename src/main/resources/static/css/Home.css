@@ -1,0 +1,132 @@
+/* Các quy tắc CSS khác như trước... */
+#carouselExample {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+}
+
+
+.search-form {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.slider-container {
+    padding: 20px 0;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    margin-top: -30px;
+}
+
+.search-form .btn {
+    margin-top: 2px;
+    display: block;
+    background: red;
+    margin-left: 230px;
+    width: 30%;
+}
+
+.btn-custom {
+    background-color: orangered;
+    color: white;
+}
+
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.needBold {
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.needBold .card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #333;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    height: 4px;
+    background-color: orangered;
+    border-radius: 2px;
+}
+
+.btn-view-details {
+    background-color: #007bff; /* Màu xanh dương */
+    color: white; /* Màu chữ trắng */
+    margin-top: 10px; /* Thêm khoảng cách cho nút */
+}
+
+.btn-view-details:hover {
+    background-color: #0056b3;
+}
+
+.job-card {
+    margin-bottom: 30px; /* Tăng khoảng cách giữa các card */
+}
+
+.service-item h5 {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.service-item h5 i {
+    margin-right: 8px;
+    color: orangered;
+}
+
+.company-name {
+    white-space: nowrap; /* Ngăn không cho xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." khi nội dung quá dài */
+    max-width: 200px; /* Giới hạn chiều rộng (tùy chỉnh phù hợp) */
+    display: inline-block;
+    vertical-align: middle;
+}

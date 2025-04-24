@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaoNgoCv-Homepage</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/whole.css" rel="stylesheet">
+    <link href="/css/Home.css" rel="stylesheet">
+    <script src="/js/FetchNotification.js" defer></script>
+    <script src="/js/Home.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+
+</head>
+
+<body>
+<div th:replace="fragments/headerAndFooter :: header"></div>
+
+<section class="slider-container">
+    <div th:replace="fragments/headerAndFooter :: slider"></div>
+</section>
+
+<div class="needBold">
+    <section class="hero-section">
+        <div class="container">
+            <h2>Find Your Dream Job</h2>
+            <div class="search-form">
+                <form th:action="@{/jobseeker/job-search}" method="GET">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="keyword" class="form-label">Keyword</label>
+                            <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}"
+                                   placeholder="Job title, skills">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location">
+                                <option value="" th:selected="${location == 'default'}">Select province/city...
+                                </option>
+
+                                <option value="Da Nang" th:selected="${location == 'Da Nang'}">Da Nang</option>
+
+                                <option value="Hanoi" th:selected="${location == 'Hanoi'}">Hanoi</option>
+
+                                <option value="Ho Chi Minh City" th:selected="${location == 'Ho Chi Minh City'}">Ho Chi
+                                    Minh City
+                                </option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+                            <label for="experience" class="form-label">Experience</label>
+                            <select class="form-select" id="experience" name="experience">
+                                <option value="" th:selected="${experience == ''}">Experience
+                                    requirement...
+                                </option>
+                                <option value="0+" th:selected="${experience == '0+'}">No required</option>
+                                <option value="1+" th:selected="${experience == '1+'}">1+ years</option>
+                                <option value="2+" th:selected="${experience == '2+'}">2+ years</option>
+                                <option value="3+" th:selected="${experience == '3+'}">3+ years</option>
+                                <option value="4+" th:selected="${experience == '4+'}">4+ years</option>
+                                <option value="5+" th:selected="${experience == '5+'}">5+ years</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="salaryRange" class="form-label">Salary Range</label>
+                            <select class="form-select" id="salaryRange" name="salaryRange">
+                                <option value="" th:selected="${salaryRange == 'default'}">Choose salary
+                                    range...
+                                </option>
+                                <option value="Under 10 million VND"
+                                        th:selected="${salaryRange == 'Under 10 million VND'}">Under 10 million VND
+                                </option>
+                                <option value="10-20 million VND" th:selected="${salaryRange == '10-20 million VND'}">
+                                    10-20 million VND
+                                </option>
+                                <option value="20-30 million VND" th:selected="${salaryRange == '20-30 million VND'}">
+                                    20-30 million VND
+                                </option>
+                                <option value="Over 40 million VND"
+                                        th:selected="${salaryRange == 'Over 40 million VND'}">Over 40 million VND
+                                </option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-6 mb-3" style="margin-top: 30px; margin-left: -250px;">
+                            <button type="submit" id="searchButton" class="btn btn-custom w-70">
+                                <i class="fas fa-search"></i> Search Jobs
+                            </button>
+
+                        </div>
+                    </div>
+                </form>
+                <!-- Hiển thị thông báo lỗi tìm kiếm -->
+                <div class="searchingError alert alert-danger mt-3" style="display: none">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="job-listing-section" style="margin-top: 20px;">
+        <div class="container">
+            <h2 class="text-center mb-5">Featured Jobs</h2>
+            <div class="row">
+                <!-- Nếu có thông báo lỗi thì hiển thị -->
+                <div th:if="${errorMessage}" class="alert alert-danger">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+                <div th:each="job : ${jobPostings}" class="col-md-4 job-card">
+                    <div class="card">
+                        <div class="card-body d-flex align-items-center justify-content-start">
+                            <img th:src="${job.company.companyLogo}" alt="Company Logo" class="company-logo img-fluid"
+                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                            <div class="ms-3"> <!-- Tạo khoảng cách bên trái nội dung -->
+                                <h5 class="card-title" th:text="${job.title}">Job Title</h5>
+                                <p class="card-text company-name" th:text="${job.company.name + ', ' + job.location}">Company, Location</p>
+                                <div style="display: flex; gap: 20px;">
+                                    <a th:href="@{/jobseeker/job-detail/{id}(id=${job.id})}" class="btn btn-custom btn-view-details">View Details</a>
+                                    <a th:href="@{/jobseeker/apply-job/{id}(id=${job.id})}" class="btn btn-custom" style="margin-top: 10px;">Apply Now</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-section" style="margin-top: 20px;">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Services</h2>
+            <div class="row">
+                <div class="col-md-4 service-item">
+                    <img src="/img/service/search.png" alt="Job Search" class="img-fluid">
+                    <h5><i class="fas fa-briefcase"></i> Job Search</h5>
+                    <p>Find the job that suits you best from thousands of listings.</p>
+                </div>
+                <div class="col-md-4 service-item">
+                    <img src="/img/service/cvwriting.png" alt="CV Writing" class="img-fluid">
+                    <h5><i class="fas fa-file-alt"></i> CV Writing</h5>
+                    <p>Get professional help to create an outstanding CV.</p>
+                </div>
+                <div class="col-md-4 service-item">
+                    <img src="/img/service/advice.png" alt="Career Advice" class="img-fluid">
+                    <h5><i class="fas fa-comments"></i> Career Advice</h5>
+                    <p>Receive expert advice to advance your career.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div th:replace="fragments/headerAndFooter :: footer"></div>
+
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchButton = document.getElementById('searchButton');
+        const keywordInput = document.getElementById('keyword');
+        const locationSelect = document.getElementById('location');
+        const experienceSelect = document.getElementById('experience');
+        const salaryRangeSelect = document.getElementById('salaryRange');
+
+        // Hàm kiểm tra ít nhất 1 trường được điền
+        function checkFormCompletion() {
+            // Kiểm tra xem có trường nào được điền chưa
+            if (keywordInput.value.trim() !== '' ||
+                locationSelect.value !== '' ||
+                experienceSelect.value !== '' ||
+                salaryRangeSelect.value !== '') {
+                searchButton.disabled = false; // Kích hoạt nút tìm kiếm
+            } else {
+                searchButton.disabled = true;  // Vô hiệu hóa nút tìm kiếm
+            }
+        }
+
+        // Kiểm tra trạng thái của nút tìm kiếm khi trang được tải lại
+
+
+        // Kiểm tra khi người dùng thay đổi giá trị trong các trường tìm kiếm
+        keywordInput.addEventListener('input', checkFormCompletion);
+        locationSelect.addEventListener('change', checkFormCompletion);
+        experienceSelect.addEventListener('change', checkFormCompletion);
+        salaryRangeSelect.addEventListener('change', checkFormCompletion);
+
+        // Kiểm tra lại khi các trường đã có giá trị từ phía server sau khi trang được tải
+        window.addEventListener('load', checkFormCompletion);  // Chạy lại kiểm tra trạng thái nút tìm kiếm khi tải xong
+    });
+</script>
+
+</html>
