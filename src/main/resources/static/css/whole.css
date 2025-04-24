@@ -1,0 +1,277 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.container {
+    flex: 1;
+}
+
+footer {
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.nav-link:hover {
+    color: black !important;
+}
+
+
+.navbar-nav .nav-item:hover .dropdown-menu {
+    display: block; /* Hiển thị menu khi hover */
+    opacity: 1; /* Hiển thị menu với độ trong suốt đầy đủ */
+    transform: translateY(0); /* Đưa menu về vị trí gốc */
+}
+
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+
+}
+
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+/* Change the primary color to red */
+.navbar, .btn-primary, footer {
+    background-color: #d32f2f;
+    color: #fff;
+}
+
+/* Ẩn mũi tên dropdown */
+.navbar-nav .nav-item .dropdown-toggle::after {
+    display: none; /* Ẩn mũi tên bằng cách không hiển thị nó */
+}
+
+/* Tăng khoảng cách giữa các chữ trong thanh điều hướng */
+.nav-link {
+    letter-spacing: 0.1em; /* Điều chỉnh giá trị theo nhu cầu */
+}
+
+/* Tăng khoảng cách giữa các mục trong thanh điều hướng */
+.navbar-nav .nav-item {
+    margin-right: 2rem; /* Khoảng cách giữa các mục */
+}
+
+/* Đảm bảo không có khoảng cách thừa ở phần tử cuối cùng */
+.navbar-nav .nav-item:last-child {
+    margin-right: 0;
+}
+
+
+/* Nút màu xanh dương */
+.custom-btn {
+    color: #ffffff;
+    background-color: #007bff; /* Thay đổi màu nền theo yêu cầu */
+    border: 1px solid #007bff; /* Đường viền cùng màu với nền */
+}
+
+/* Hiệu ứng hover */
+.custom-btn:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+    color: #ffffff; /* Màu chữ khi hover */
+    transform: scale(1.05); /* Tăng kích thước khi hover */
+}
+
+/* Hiệu ứng focus */
+.custom-btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); /* Đổ bóng cho nút khi focus */
+    outline: none; /* Loại bỏ đường viền focus mặc định */
+}
+
+/* Tạo khoảng cách giữa logo và các chỉ mục trong navbar */
+.navbar-nav {
+    margin-left: 30px; /* Điều chỉnh giá trị theo nhu cầu */
+}
+
+/* Thay đổi màu chữ khi bấm vào các liên kết trong footer */
+
+.footerLink:hover, .footerLink:active {
+    color: black !important; /* Màu đen khi bấm vào */
+
+}
+
+.custom-navbar {
+    margin-left: 10px;
+}
+
+
+.custom-dropdown {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+
+}
+
+.custom-dropdown .dropdown-item {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.custom-dropdown .dropdown-item:hover {
+    background-color: #e0e0e0; /* Màu nền khi hover */
+    font-weight: bold;
+    color: #FF5733; /* Màu chữ khi hover */
+}
+
+.needLeft {
+    left: -10rem;
+
+}
+
+.needOverFlow {
+     position: absolute;
+
+     right: auto; /* Đảm bảo không bị căn phải */
+     width: 300px; /* Chiều rộng cố định cho dropdown */
+     max-height: 300px; /* Chiều cao tối đa */
+     overflow-y: auto; /* Cuộn dọc nếu nội dung vượt quá chiều cao */
+
+
+
+ }/* Phần tử thông báo chính */
+.notification-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+
+/* Người gửi */
+.notification-sender {
+    font-size: 0.9rem;
+    color: #495057;
+    margin-top: 5px;
+}
+
+/* Thời gian */
+.notification-time {
+    font-size: 0.8rem;
+    color: #868e96;
+    margin-top: 3px;
+    text-align: right;
+}
+
+/* Hover hiệu ứng */
+.notification-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}/* Tăng kích thước tổng thể của dropdown */
+.notification-dropdown {
+    min-width: 400px; /* Tăng chiều rộng */
+    max-width: 500px; /* Giới hạn chiều rộng tối đa */
+    padding: 15px; /* Tăng khoảng cách bên trong */
+    border-radius: 8px; /* Bo góc mềm mại */
+    background-color: #ffffff; /* Màu nền */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+    max-height: 700px; /* Giới hạn chiều cao của dropdown */
+    overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
+}
+
+
+/* Phần tử thông báo */
+.notification-item {
+    display: flex;
+    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+}
+
+/* Phần ảnh đại diện */
+.notification-avatar {
+    flex-shrink: 0;
+    margin-right: 10px; /* Khoảng cách giữa ảnh và nội dung */
+
+}
+
+.notification-avatar img {
+    width: 40px; /* Kích thước ảnh đại diện */
+    height: 40px;
+    border-radius: 50%; /* Bo tròn ảnh đại diện */
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+
+
+}
+
+
+/* Phần nội dung thông báo */
+.notification-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa nội dung theo chiều dọc */
+}
+
+.notification-unread {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.notification-read {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #666;
+}
+
+.notification-sender {
+    font-size: 0.8rem;
+
+    margin-top: 2px;
+}
+
+.notification-time {
+    font-size: 0.8rem;
+    margin-top: 2px;
+    text-align: right;
+}
+.notification-link {
+    text-decoration: none; /* Bỏ gạch chân */
+    color: inherit;        /* Giữ nguyên màu chữ */
+}
+.btn-custom {
+    background-color: orangered;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+}/* Di chuyển icon thông báo sang trái */
+.notificationNeed {
+    position: relative;
+    left: -260px; /* Di chuyển icon sang trái */
+}
+.notification-system-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #007bff; /* Màu chữ khác biệt, có thể chọn màu bạn thích */
+    text-align: center; /* Căn giữa */
+    margin-bottom: 20px; /* Khoảng cách dưới */
+    cursor: default; /* Đảm bảo không có hiệu ứng con trỏ khi hover */
+    user-select: none; /* Không cho phép chọn văn bản */
+
+
+}
+.notification-item {
+    margin-top: 10px; /* Tạo khoảng cách giữa phần tiêu đề và các thông báo */
+}
