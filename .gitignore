@@ -1,0 +1,67 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+logs/
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.oracle.com/technetwork/java/javase/documentation/vmoptions-jsp-140102.html
+hs_err_pid*
+
+# Maven build output directory (Rất quan trọng!)
+target/
+
+# বিল্ড ফোল্ডার for Gradle (เผื่อ dùng Gradle)
+# build/
+
+# IDE configuration folders (IntelliJ IDEA)
+.idea/
+*.iml
+*.ipr
+*.iws
+# out/  # Older IntelliJ output directory
+
+# IDE configuration files (Eclipse)
+.settings/
+.classpath
+.project
+
+# IDE configuration files (VSCode)
+.vscode/
+
+# IDE configuration files (NetBeans)
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files created by an OS like Vi or Vim
+*~
+*.swp
+
+# Uploaded files (Tùy chọn: Bỏ comment dòng dưới nếu bạn KHÔNG muốn đưa thư mục uploads vào Git)
+# uploads/
+
+# Application-specific secret files (Ví dụ, không commit file cấu hình production hoặc secret)
+# application-prod.properties
+# secrets.yml
