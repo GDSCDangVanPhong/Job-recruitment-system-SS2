@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaoNgoCv - Apply Job</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/whole.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/FetchNotification.js" defer></script>
+    <style>
+        /* General Body Style */
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .job-detail-container, .application-form {
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border: 1px solid #e0e0e0;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid orangered;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: orangered;
+        }
+
+        .btn-custom {
+            background-color: orangered;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-custom:hover {
+            background-color: darkorange;
+            transform: scale(1.05);
+        }
+
+        .job-description {
+            max-height: 300px; /* Set fixed height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-bottom: 20px;
+            background: #f9f9f9; /* Màu nền trắng đậm hơn */
+            padding: 20px; /* Tăng padding */
+            border-radius: 10px; /* Bo góc cho phần mô tả */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng đổ bóng */
+            border: 2px solid orangered; /* Đường viền màu cam */
+        }
+
+        /* Application Form Styling */
+        .application-form h3 {
+            margin-bottom: 20px;
+            color: orangered;
+        }
+
+        .application-form label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .application-form input,
+        .application-form textarea {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+
+        .application-form input:focus,
+        .application-form textarea:focus {
+            border-color: orangered;
+            box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+        }
+
+        .tips-container {
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tips-container h3 {
+            margin-bottom: 15px;
+            color: orangered;
+            font-weight: bold; /* Bolder font for better emphasis */
+            font-size: 1.75rem; /* Increased font size */
+        }
+
+        .tip-item {
+            margin-bottom: 15px; /* Increased space between tips */
+            font-size: 1.1rem; /* Slightly larger font for tips */
+            color: #333;
+        }
+
+        .tip-icon {
+            margin-right: 10px; /* Space between icon and text */
+            color: orangered; /* Icon color */
+        }
+
+        .divider {
+            border: none; /* Ẩn viền mặc định */
+            border-top: 2px solid orangered; /* Đường kẻ trên màu cam */
+            margin: 20px 0; /* Tạo khoảng cách trên và dưới */
+        }
+
+        .bao-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid orangered;
+            font-style: italic;
+            color: #555;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng đổ bóng */
+        }
+
+        .bao-message p {
+            margin: 0;
+        }
+
+        .bao-message strong {
+            color: orangered;
+        }
+
+        .icon {
+            color: orangered;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+
+<div th:replace="fragments/headerAndFooter :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="job-detail-container position-relative">
+                <h1 th:text="${jobPosting.title}">Senior Software Engineer</h1>
+                <div class="row" style="border-left: 7px solid orangered;
+            background-color: #f9f9f9;
+            border-radius: 40px;   margin-bottom: 30px;
+            padding: 20px;">
+                    <div class="col-6">
+                        <div class="company-info ">
+                            <h2><i class="fas fa-building icon"></i> Company: <span
+                                    th:text="${jobPosting.company.name}">Tech Innovators Inc.</span> <span
+                                    class="badge badge-pill position-absolute top-0 end-0 m-2"
+                                    th:classappend="${jobPosting.applicantCount >= jobPosting.maxApplicants ? 'bg-danger' : 'bg-info'}"
+                                    style="font-size: 0.9rem;">
+    <i class="fas fa-users"></i>
+    <span id="applicantCount" th:text="${jobPosting.applicantCount}">5</span> /
+    <span th:text="${jobPosting.maxApplicants}">10</span> Applicants
+</span>
+                            </h2>
+                            <p>
+                                <i class="fas fa-map-marker-alt icon"></i> Location:
+                                <strong th:text="${jobPosting.location}">Location</strong>
+                            </p>
+                            <p>
+                                <i class="fas fa-money-bill-wave icon"></i> Salary:
+                                <strong th:text="${jobPosting.salaryRange}">Salary Range</strong>
+                            </p>
+                            <p>
+                                <i class="fas fa-calendar-day icon"></i> Posted on:
+                                <strong th:text="${jobPosting.createdAt}">Posted Date</strong>
+                            </p>
+                            <p>
+                                <i class="fas fa-calendar-check icon"></i> Deadline on:
+                                <strong th:text="${jobPosting.applicationDeadline}">Deadline Date</strong>
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div th:if="${alreadyApplied}">
+                            <div class="alert alert-warning alert-dismissible fade show " role="alert">
+                                <i class="fas fa-exclamation-circle"></i> You have already applied for this job!
+
+                            </div>
+                        </div>
+                        <!-- Save Job Button -->
+                        <div class="d-flex justify-content-end" th:id="|job-buttons-${jobPosting.id}|">
+                            <button
+                                    th:if="${!isSavedJob}"
+                                    th:onclick="|saveJob(${jobPosting.id})|"
+                                    class="btn btn-outline-primary btn-sm me-2">
+                                <i class="fas fa-bookmark"></i> Save Job
+                            </button>
+
+                            <button
+                                    th:if="${isSavedJob}"
+                                    th:onclick="|unsaveJob(${jobPosting.id})|"
+                                    class="btn btn-outline-secondary btn-sm me-2">
+                                <i class="fas fa-trash-alt"></i> Unsave
+                            </button>
+
+
+                        </div>
+                        <!-- Job Status Display -->
+                        <p class="job-status mt-5" style="margin-left: 270px;">
+                            <i class="fas"
+                               th:classappend="${jobPosting.status.name() == 'OPEN' ? 'fa-check-circle text-success' :
+                        (jobPosting.status.name() == 'CLOSED' ? 'fa-times-circle text-danger' :
+                        (jobPosting.status.name() == 'EXPIRED' ? 'fa-clock text-warning' :
+                        (jobPosting.status.name() == 'FILLED' ? 'fa-user-check text-secondary' : 'fa-info-circle text-info')))}"></i>
+                            <span th:classappend="${jobPosting.status.name() == 'OPEN' ? 'text-success fw-bold' :
+           (jobPosting.status.name() == 'CLOSED' ? 'text-danger fw-bold' :
+           (jobPosting.status.name() == 'EXPIRED' ? 'text-warning fw-bold' :
+           (jobPosting.status.name() == 'FILLED' ? 'text-secondary fw-bold' : 'text-info')))}"
+                                  th:text="${jobPosting.status}">Job Status</span>
+                        </p>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <div th:if="${message}">
+                            <!-- Success Message -->
+                            <div th:if="${message == 'Application submitted successfully!'}" style="margin-top: 20px;"
+                                 class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle"></i> <span th:text="${message}">Application submitted successfully</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <!-- Already Applied Message -->
+                            <div th:if="${message == 'You have applied for this job already'}"
+                                 class="alert alert-warning alert-dismissible fade show" role="alert"
+                                 style="margin-top: 20px;">
+                                <i class="fas fa-exclamation-circle"></i> <span th:text="${message}">You have applied for this job already</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+
+                            </div>
+                            <!-- Already Applied Message -->
+                            <div th:if="${message == 'This job posting has expired. You can no longer apply.'}"
+                                 class="alert alert-warning alert-dismissible fade show" role="alert"
+                                 style="margin-top: 20px;">
+                                <i class="fas fa-exclamation-circle"></i> <span th:text="${message}">You have applied for this job already</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+
+                            </div>
+
+                            <!-- Already Applied Message -->
+                            <div th:if="${message == 'Please update your profile before applying for a job.'}"
+                                 style="margin: 20px;" class="alert alert-warning alert-dismissible fade show"
+                                 role="alert">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span th:text="${message}">You have applied for this job already</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+
+                                <!-- Thêm nút chuyển hướng -->
+                                <a href="/jobseeker/profile-update" class="btn btn-warning btn-sm ms-3">Update
+                                    Profile</a>
+                            </div>
+
+                            <!-- Limit Reached Message -->
+                            <div th:if="${message == 'The number of applicants for this job posting has reached its limit.'}"
+                                 class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-times-circle"></i> <span th:text="${message}">The number of applicants for this job posting has reached its limit.</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <hr class="divider">
+                <div class="job-description">
+                    <h2><i class="fas fa-briefcase"></i>Job Description</h2>
+                    <p th:utext="${jobPosting.description}">We are looking for a Senior Software Engineer with a passion
+                        for technology and a desire to work in a fast-paced environment. The ideal candidate will have
+                        experience with full-stack development and be comfortable working with both front-end and
+                        back-end technologies.</p>
+
+                    <h2><i class="fas fa-check-circle icon"></i> Job Requirements</h2>
+                    <div style="font-weight: bold; color: orangered; font-size: 1.2rem; margin-bottom: 15px;">
+                        <span th:if="${jobPosting.experience != null}"
+                              th:text="'Experience: ' + ${jobPosting.experience} + ' years required'">Experience Requirement</span>
+                    </div>
+                    <ul>
+                        <li th:each="requirement : ${requirements}" th:text="${requirement.description}"></li>
+                    </ul>
+
+                    <h2><i class="fas fa-gift icon"></i> Benefits</h2>
+                    <ul>
+
+                        <li th:text="${jobPosting.benefit}">Benefit</li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <!-- Tips Section (Right Column) -->
+        <div class="col-lg-4 col-md-12">
+            <div class="tips-container">
+                <h3>Tips for Successful Application</h3>
+                <ul class="list-unstyled">
+                    <li class="tip-item">
+                        <i class="fas fa-pencil-alt tip-icon"></i> Customize your resume and cover letter for each
+                        application.
+                    </li>
+                    <li class="tip-item">
+                        <i class="fas fa-search tip-icon"></i> Research the company and the job position thoroughly.
+                    </li>
+                    <li class="tip-item">
+                        <i class="fas fa-comments tip-icon"></i> Practice common interview questions and prepare your
+                        answers.
+                    </li>
+                    <li class="tip-item">
+                        <i class="fas fa-envelope tip-icon"></i> Follow up after your application to express your
+                        interest.
+                    </li>
+                    <li class="tip-item">
+                        <i class="fas fa-heart tip-icon"></i> Be honest and authentic in your responses.
+                    </li>
+                </ul>
+
+                <!-- Lời chúc của BaoNgoCv -->
+                <div class="bao-message">
+                    <p><em>Good luck with your application process! Wishing you all the best on your career
+                        journey.</em></p>
+                    <p style="text-align: right;"><strong>— BaoNgoCv Team</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Form Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="application-form">
+                <h3>Application Form</h3>
+                <form th:action="@{/jobseeker/apply-job/{id}(id=${jobPosting.id})}" method="post"
+                      enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <p><i class="fas fa-user icon"></i> Full Name: <span id="fullName"><strong
+                                th:text="${user.fullName}">John Doe</strong></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <p><i class="fas fa-envelope icon"></i> Email: <span id="email"><strong th:text="${user.email}">john.doe@example.com</strong></span>
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <p><i class="fas fa-phone icon"></i> Phone Number: <span id="phone"><strong
+                                th:text="${user.phoneNumber}">+1234567890</strong></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cvUpload"><i class="fas fa-file-upload icon"></i> Upload CV:</label>
+                        <input type="file" class="form-control" id="cvUpload" name="cvUpload" accept=".pdf,.doc,.docx"
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="coverLetter"><i class="fas fa-pencil-alt icon"></i> Cover Letter:</label>
+                        <textarea class="form-control" name="coverLetter" id="coverLetter" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-custom"><i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/headerAndFooter :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<script>
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+    function saveJob(jobPostingId) {
+        fetch(`/jobseeker/save-job/${jobPostingId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Job saved successfully!");
+                    // Cập nhật biểu tượng và text
+                    const buttonDiv = document.querySelector(`#job-buttons-${jobPostingId}`);
+                    buttonDiv.innerHTML = `
+                    <button
+                        onclick="unsaveJob(${jobPostingId})"
+                        class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="fas fa-trash-alt"></i> Unsave
+                    </button>
+                `;
+                } else {
+                    alert("Failed to save the job.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred.");
+            });
+    }
+
+    function unsaveJob(jobPostingId) {
+        fetch(`/jobseeker/unsave-job/${jobPostingId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Job unsaved successfully!");
+                    // Cập nhật biểu tượng và text
+                    const buttonDiv = document.querySelector(`#job-buttons-${jobPostingId}`);
+                    buttonDiv.innerHTML = `
+                    <button
+                        onclick="saveJob(${jobPostingId})"
+                        class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-bookmark"></i> Save Job
+                    </button>
+                `;
+                } else {
+                    alert("Failed to unsave the job.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred.");
+            });
+    }
+</script>
+
+</html>

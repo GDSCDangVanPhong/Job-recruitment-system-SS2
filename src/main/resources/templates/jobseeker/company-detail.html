@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <title>BaoNgoCv - Company Details</title>
+    <script src="/js/FetchNotification.js" defer></script>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/whole.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        /* General Body Style */
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .company-detail-container {
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border: 1px solid #e0e0e0;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid orangered;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: orangered;
+        }
+
+        .company-info {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 4px solid orangered;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .company-info p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        .btn-custom {
+            background-color: orangered;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-custom:hover {
+            background-color: darkorange;
+            transform: scale(1.05);
+        }
+
+        .icon {
+            color: orangered;
+            margin-right: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .connection {
+            text-align: center; /* Căn giữa nội dung */
+        }
+
+        #follow-button {
+            margin-top: 15px; /* Khoảng cách trên nút */
+        }
+
+
+        .btn-view-details {
+            background-color: #007bff; /* Màu xanh dương */
+            color: white; /* Màu chữ trắng */
+            margin-top: 10px; /* Thêm khoảng cách cho nút */
+        }
+
+        .btn-view-details:hover {
+            background-color: #0056b3;
+        }
+
+        .review-list {
+            max-height: 400px; /* Set a max height for the review list */
+            overflow-y: auto; /* Add scroll if content overflows */
+            margin-top: 20px;
+            padding-right: 10px;
+        }
+
+        .review-item {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item p {
+            margin: 5px 0;
+        }
+
+        .review-item strong {
+            color: orangered;
+        }
+
+        .review-item .rating {
+            color: gold;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+</head>
+
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/headerAndFooter :: header"></div>
+
+<!-- Company Detail Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="company-detail-container">
+                <h1 th:text="${company.name}">ExampleTech Co.</h1>
+
+                <div class="company-info row">
+                    <div class="col-4">
+                        <h2>
+                            <i class="fas fa-building icon"></i> About the Company
+                        </h2>
+                        <p>
+                            <i class="fas fa-map-marker-alt icon"></i> Location:
+                            <strong th:text="${company.location}">Silicon Valley, CA</strong>
+                        </p>
+                        <p>
+                            <i class="fas fa-industry icon"></i> Industry:
+                            <strong th:text="${company.industry.name}">Software Development</strong>
+                        </p>
+                        <p>
+                            <i class="fas fa-users icon"></i> Company Size:
+                            <strong th:if="${company.companySize >= 500 and company.companySize <= 1000}"
+                                    th:text="'500 - 1000 employees'"></strong>
+                            <strong th:if="${company.companySize < 500}" th:text="' > 500 employees'"></strong>
+                            <strong th:if="${company.companySize > 1000}" th:text="' < 1000 employees'"></strong>
+
+                        </p>
+                        <p>
+                            <i class="fas fa-calendar-alt icon"></i> Founded:
+                            <strong th:text="${formattedCreatedAt}">2010</strong>
+                        </p>
+                    </div>
+                    <div class="contact-info col-4">
+                        <h2><i class="fas fa-envelope icon"></i> Contact Information</h2>
+                        <p>Email: <strong th:text="${company.contactEmail}">example@exampletech.com</strong></p>
+                        <p>Phone: <strong th:text="${company.contactPhone}">+1 800 123 4567</strong></p>
+                        <p>Website: <strong th:text="${company.website}">baongocv.com.vn</strong></p>
+                    </div>
+
+                    <div class="connection col-4">
+                        <h2><i class="fas fa-users icon"></i> Connection</h2>
+                        <p>
+                            <strong>Followers:</strong> <span id="follower-count" th:text="${company.followers.size()}">1,245</span>
+                        </p>
+                        <button
+                                class="btn"
+                                id="follow-button"
+                                th:data-company-id="${company.id}"
+                                th:data-action="${followStatus eq 'followed' ? 'unfollow' : (followStatus eq 'not yet' ? 'follow' : 'login')}"
+                                th:text="${followStatus eq 'followed' ? 'Unfollow' : (followStatus eq 'not yet' ? 'Follow' : 'Login to Follow')}"
+                                th:classappend="${followStatus eq 'followed' ? 'btn-danger' : (followStatus eq 'not yet' ? 'btn-info' : 'btn-secondary')}"
+                                th:disabled="${followStatus eq 'login to follow'}">
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="company-description">
+                    <h2><i class="fas fa-info-circle icon"></i> Company Overview</h2>
+                    <p th:utext="${company.description}">
+                        Our mission is to deliver
+                        high-quality software products that drive efficiency and growth.
+                    </p>
+                </div>
+
+                <!-- Job Openings Section -->
+                <div class="job-openings mt-5">
+                    <h2><i class="fas fa-briefcase icon"></i> Job Openings</h2>
+                    <ul class="list-group">
+                        <li th:each="jobPosting : ${jobPostingByCompany}" class="list-group-item">
+                            <strong th:text="${jobPosting.title}">Job Title</strong> - <span
+                                th:text="${jobPosting.jobType}">Job Type</span><br>
+                            <em>Location:</em> <span th:text="${jobPosting.location}">Location</span><br>
+                            <em>Salary:</em> <span th:text="${jobPosting.salaryRange}">Salary</span><br>
+                            <a th:href="@{/jobseeker/job-detail/{id}(id=${jobPosting.id})}"
+                               class="btn btn-sm btn-custom mt-2 btn-view-details">View Details</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- review -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 company-detail-container">
+            <div class="review-section">
+                <h2><i class="fas fa-star icon"></i> Reviews</h2>
+                <div class="review-list">
+                    <!-- Example review -->
+                    <div class="review-item">
+                        <p><strong>John Doe</strong> - <span>2024-12-25</span></p>
+                        <p>Great company with a supportive environment!</p>
+                        <p class="rating">Rating: 4.5/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>Jane Smith</strong> - <span>2024-12-24</span></p>
+                        <p>Had a fantastic experience working here. Highly recommend!</p>
+                        <p class="rating">Rating: 5/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>Michael Lee</strong> - <span>2024-12-20</span></p>
+                        <p>Good company but could improve work-life balance.</p>
+                        <p class="rating">Rating: 3.5/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>Sarah Green</strong> - <span>2024-12-18</span></p>
+                        <p>Fantastic leadership and amazing growth opportunities!</p>
+                        <p class="rating">Rating: 4.8/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>David Brown</strong> - <span>2024-12-15</span></p>
+                        <p>The team is supportive, but the work pace can be overwhelming.</p>
+                        <p class="rating">Rating: 3.9/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>Amy White</strong> - <span>2024-12-10</span></p>
+                        <p>Great culture and amazing perks. Highly recommend!</p>
+                        <p class="rating">Rating: 4.7/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>James Black</strong> - <span>2024-12-05</span></p>
+                        <p>Good company overall, but there's room for improvement in communication.</p>
+                        <p class="rating">Rating: 3.6/5</p>
+                    </div>
+                    <div class="review-item">
+                        <p><strong>Olivia Grey</strong> - <span>2024-12-01</span></p>
+                        <p>Fantastic place to grow and learn, though the work-life balance needs work.</p>
+                        <p class="rating">Rating: 4.2/5</p>
+                    </div>
+                    <!-- End example review -->
+                    <!-- Dynamic reviews from backend should go here -->
+                    <div th:each="review : ${reviews}" class="review-item">
+                        <p><strong th:text="${review.username}">John Doe</strong> - <span th:text="${review.date}">2024-12-25</span>
+                        </p>
+                        <p th:text="${review.content}">Great company with a supportive environment!</p>
+                        <p class="rating">Rating: <span th:text="${review.rating}">4.5</span>/5</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div th:replace="fragments/headerAndFooter :: footer"></div>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+        const followButton = document.getElementById("follow-button");
+
+        followButton.addEventListener("click", function () {
+            // Lấy trạng thái hiện tại (follow hoặc unfollow)
+            let action = this.getAttribute("data-action");
+            let companyId = this.getAttribute("data-company-id");
+
+            // Thực hiện thay đổi trạng thái (có thể gửi request tới backend ở đây)
+            if (action === "follow") {
+                // Gửi yêu cầu follow
+                followCompany(companyId);
+                this.setAttribute("data-action", "unfollow");
+                this.innerText = "Unfollow";
+                this.classList.remove("btn-info");
+                this.classList.add("btn-danger");
+            } else if (action === "unfollow") {
+                // Gửi yêu cầu unfollow
+                unfollowCompany(companyId);
+                this.setAttribute("data-action", "follow");
+                this.innerText = "Follow";
+                this.classList.remove("btn-danger");
+                this.classList.add("btn-info");
+            }
+        });
+
+
+        function followCompany(companyId) {
+            fetch(`/jobseeker/job-following?companyId=${companyId}&follow=true`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+
+
+                    // Tăng số lượng followers trên giao diện
+                    const followerCountElement = document.getElementById('follower-count');
+                    if (followerCountElement) {
+                        let currentCount = parseInt(followerCountElement.textContent.replace(/,/g, ''), 10);
+                        if (!isNaN(currentCount)) {
+                            currentCount++; // Tăng 1 follower
+                            followerCountElement.textContent = currentCount.toLocaleString(); // Định dạng lại số
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function unfollowCompany(companyId) {
+            fetch(`/jobseeker/job-following?companyId=${companyId}&follow=false`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Tăng số lượng followers trên giao diện
+                    const followerCountElement = document.getElementById('follower-count');
+                    if (followerCountElement) {
+                        let currentCount = parseInt(followerCountElement.textContent.replace(/,/g, ''), 10);
+                        if (!isNaN(currentCount)) {
+                            currentCount--; // Tăng 1 follower
+                            followerCountElement.textContent = currentCount.toLocaleString(); // Định dạng lại số
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+</html>
