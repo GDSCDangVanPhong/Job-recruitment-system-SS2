@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Reviewed Detail</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="/css/whole.css" rel="stylesheet">
+  <script src="/js/FetchNotification.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+  <style>
+    .application-detail-section {
+      padding: 50px 20px;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
+
+    h4 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .list-group-item {
+      font-size: 1.1rem;
+      padding: 15px;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+
+    .card-custom {
+      padding: 25px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      color: orangered;
+      margin-right: 10px;
+    }
+
+    .btn-secondary {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 12px 25px;
+      border-radius: 30px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .application-detail-section {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      h4 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .status-approved {
+      color: green;
+    }
+
+    .status-rejected {
+      color: red;
+    }
+
+    .status-pending {
+      color: orange;
+    }
+
+  </style>
+</head>
+
+<body>
+<div th:replace="fragments/headerAndFooter :: header"></div>
+
+<section class="application-detail-section">
+  <div class="container">
+
+    <div class="row">
+      <!-- Applicant Information -->
+      <div class="col-md-6">
+        <div class="card-custom">
+          <h4><i class="fas fa-user icon"></i>Applicant Information</h4>
+          <ul class="list-group">
+            <li class="list-group-item"><strong>Name:</strong> <span th:text="${applicationReview.applicant.user.fullName}">Nguyen Minh Tu</span></li>
+            <li class="list-group-item"><strong>Email:</strong> <span th:text="${applicationReview.applicant.user.email}">minhtu@example.com</span></li>
+            <li class="list-group-item"><strong>Phone:</strong> <span th:text="${applicationReview.applicant.user.phoneNumber}">+84987654321</span></li>
+            <li class="list-group-item"><strong>Location:</strong> <span th:text="${applicationReview.applicant.user.address}">Ho Chi Minh City</span></li>
+            <li class="list-group-item"><strong>Date of Birth:</strong> <span th:text="${applicationReview.applicant.user.dateOfBirth}">1990-05-15</span></li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- Job Information -->
+      <div class="col-md-6">
+        <div class="card-custom" style="position: relative;">
+          <h4><i class="fas fa-briefcase icon"></i>Job Information</h4>
+          <ul class="list-group">
+            <li class="list-group-item"><strong>Job Title:</strong> <span th:text="${applicationReview.applicant.jobPosting.title}">Senior Software Engineer</span></li>
+            <li class="list-group-item"><strong>Company:</strong> <span th:text="${applicationReview.reviewer.name}">Tech Solutions Inc.</span></li>
+            <li class="list-group-item"><strong>Location:</strong> <span th:text="${applicationReview.applicant.jobPosting.location}">Ho Chi Minh City</span></li>
+            <li class="list-group-item"><strong>Salary Range:</strong> <span th:text="${applicationReview.applicant.jobPosting.salaryRange}">20-30 million VND</span></li>
+            <li class="list-group-item"><strong>Job Description:</strong> <span th:text="${applicationReview.applicant.jobPosting.description}">Developing and maintaining web applications, focusing on scalability and performance.</span></li>
+          </ul>
+          <!-- Button to view job posting details, positioned at the top right corner -->
+          <a th:href="@{/jobseeker/job-detail/{id}(id=${applicationReview.applicant.jobPosting.id})}"
+             class="btn btn-custom" style="position: absolute; top: 10px; right: 10px;">
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <!-- Application Status -->
+      <div class="col-md-12">
+        <div class="card-custom">
+          <h4><i class="fas fa-check-circle icon"></i>Application Status</h4>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <strong>Status:</strong>
+              <span th:text="${applicationReview.applicant.status}" class="status-pending">Pending</span>
+            </li>
+            <li class="list-group-item" >
+              <strong>Review Date:</strong> <span th:text="${applicationReview.reviewDate}">2025-01-19</span>
+            </li>
+            <li class="list-group-item" th:if="${applicationReview.reviewComments != null}">
+              <strong>Feedback:</strong> <span th:text="${applicationReview.reviewComments}">The candidate has strong technical skills, but lacks experience with large-scale systems. Recommend a technical interview.</span>
+            </li>
+            <li class="list-group-item" th:if="${applicationReview.reviewComments == null}">
+              <strong>Feedback:</strong> <span >There are not any comment yet!</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<div th:replace="fragments/headerAndFooter :: footer"></div>
+</body>
+
+</html>
