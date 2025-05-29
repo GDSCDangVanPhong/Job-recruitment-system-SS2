@@ -1,0 +1,195 @@
+
+
+<!--header -->
+<nav th:fragment="header" class="navbar navbar-expand-lg">
+    <!-- Overlay loading -->
+    <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center d-none"
+         id="loadingOverlay" style="z-index: 1051; position: fixed !important;">
+        <div class="spinner-border text-light" role="status"></div>
+    </div>
+
+    <div class="container-fluid">
+        <a href="/main/home">
+            <img src="/img/logo/logoShop.png" width="40" alt="Logo">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto"> <!-- Các mục menu chính bên trái -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Job
+                    </a>
+                    <ul class="dropdown-menu custom-dropdown" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/jobseeker/job-search">Job searching</a></li>
+                        <li><a class="dropdown-item" href="#">Job Alerts</a></li>
+                        <li><a class="dropdown-item" href="#">Company list</a></li>
+                    </ul>
+                </li>
+
+
+
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Personal Profile/CV
+                    </a>
+                    <ul class="dropdown-menu custom-dropdown" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" href="#">Update Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Create CV</a></li>
+                        <li><a class="dropdown-item" href="#">CV Supporting Service</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Company
+                    </a>
+                    <ul class="dropdown-menu custom-dropdown" aria-labelledby="navbarDropdown3">
+                        <li><a class="dropdown-item" href="#">Job Posting</a></li>
+                        <li><a class="dropdown-item" href="#">Company Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Employer Services</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+
+        <ul class="navbar-nav ms-auto" >
+
+            <!-- Thêm icon thông báo vào navbar -->
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+
+
+                <a class="nav-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <!-- Font Awesome bell icon -->
+                    <i class="fas fa-bell" style="font-size: 1.5rem;"></i>
+                    <!-- Hiển thị số lượng thông báo chưa đọc -->
+                    <span class="badge bg-danger notification-badge" style="display: none;">0</span>
+                </a>
+                <ul class="dropdown-menu custom-dropdown notification-dropdown needLeft notificationNeed" aria-labelledby="notificationDropdown">
+
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown" sec:authorize="!isAuthenticated()">
+                <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    <span> Account </span>
+                </a>
+                <ul class="dropdown-menu custom-dropdown  needLeft" aria-labelledby="authDropdown">
+                    <li><a class="dropdown-item" th:href="@{/user/login}" >Login</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/register}" >Register</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+
+                    <span th:text="${#authentication.principal.username}">User</span>
+
+                </a>
+                <ul class="dropdown-menu custom-dropdown needLeft" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" th:href="@{/jobseeker/profile}">View Profile</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/password-changing}">Change password</a></li>
+                    <li><a class="dropdown-item" th:href="@{/jobseeker/job-save}">Saved Jobs</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/job-alerts}">Job Alerts</a></li>
+                    <li><a class="dropdown-item" th:href="@{/jobseeker/my-application}">Application History</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/account-settings}">Account Settings</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form action="#" th:action="@{/logout-action}" method="post" style="display: inline;">
+
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_COMPANY')">
+                <a class="nav-link dropdown-toggle" href="#" id="companyDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    <span th:text="${#authentication.principal.username}">Company</span>
+                </a>
+                <ul class="dropdown-menu custom-dropdown needLeft" aria-labelledby="companyDropdown">
+                    <li><a class="dropdown-item" th:href="@{/company/profile}">View Company Profile</a></li>
+                    <li><a class="dropdown-item" th:href="@{/company/post-a-job}">Post a Job</a></li>
+                    <li><a class="dropdown-item" th:href="@{/company/jobposting-managing}">Manage Job Listings</a></li>
+                    <li><a class="dropdown-item" th:href="@{/company/job-application-list}">View Applications</a></li>
+                    <li><a class="dropdown-item" th:href="@{/company/account-settings}">Account Settings</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form action="#" th:action="@{/logout-action}" method="post" style="display: inline;">
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+
+
+
+        </ul>
+    </div>
+
+</nav>
+
+
+<!-- Footer -->
+<footer th:fragment="footer" class="bg-dark text-light text-center text-lg-start mt-5">
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mb-3">BaoNgoCv</h5>
+                <p>&copy; 2024 All rights reserved.</p>
+                <ul class="list-unstyled">
+                    <li><a href="/about" class="text-light text-decoration-none footerLink">About Us</a></li>
+                    <li><a href="/services" class="text-light text-decoration-none footerLink">Services</a></li>
+                    <li><a href="/faq" class="text-light text-decoration-none footerLink">FAQ</a></li>
+                    <li><a href="/privacy" class="text-light text-decoration-none footerLink">Privacy Policy</a></li>
+                    <li><a href="/terms" class="text-light text-decoration-none footerLink">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-3">Contact Us</h5>
+                <p><i class="bi bi-geo-alt"></i> 101 Vong Ha Street, Ha Noi City, Viet Nam</p>
+                <p><i class="bi bi-telephone"></i> +84 0902091204 </p>
+                <p><i class="bi bi-envelope"></i> baoNgoCvSupport@gmail.com</p>
+                <div>
+                    <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--slider -->
+<div th:fragment="slider" id="carouselExample" class="carousel slide">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/img/slider/1.png" class="d-block w-100" alt="slider image">
+        </div>
+        <div class="carousel-item">
+            <img src="/img/slider/2.png" class="d-block w-100" alt="slider image">
+        </div>
+        <div class="carousel-item">
+            <img src="/img/slider/3.png" class="d-block w-100" alt="slider image">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
